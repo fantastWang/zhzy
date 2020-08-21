@@ -1,0 +1,25 @@
+
+.button {
+	background-color: #E5E5E5;
+	border-radius: 6px;
+	color: #999999;
+}
+.hightButton {
+	background-color: #18C491;
+	border-radius: 6px;
+	color: #FFFFFF;
+}
+.view_input_no {
+	margin: 0 auto;
+	text-align: left;
+	margin-left: 3vw;
+	color: #999999;
+	line-height: 6vh;
+}
+.view_input_yes {
+	margin: 0 auto;
+	text-align: left;
+	margin-left: 3vw;
+	line-height: 6vh;
+}
+

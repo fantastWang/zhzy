@@ -1,0 +1,1 @@
+<view><view style="height:98vh;text-align:center;"><view style="padding-top:25vh;"><image style="width:28vw;height:15vh;" src="../../static/img/fail.png"></image></view><view style="margin-top:2vh;"><label style="color:#333333;font-weight:bolder;font-size:14px;">出错了,请稍后再试~</label></view></view></view>

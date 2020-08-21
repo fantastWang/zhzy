@@ -1,0 +1,135 @@
+{
+	"pages": [{
+		"path": "pages/list/list",
+		"style": {
+			"navigationBarTitleText": "首页",
+			"enablePullDownRefresh": false
+		}
+	}, {
+		"path": "pages/meal/orderMeal",
+		"style": {
+			"navigationBarTitleText": "订餐"
+		}
+	}, {
+		"path": "pages/personal/personal",
+		"style": {
+			"navigationBarTitleText": "我的"
+		}
+	}, {
+		"path": "pages/login/login",
+		"style": {
+			"navigationBarTitleText": "登录"
+		}
+	}, {
+		"path": "pages/login/forgotPassword",
+		"style": {
+			"navigationBarTitleText": "修改密码"
+		}
+	}, {
+		"path": "pages/service/serviceOrder",
+		"style": {
+			"navigationBarTitleText": "服务预约"
+		}
+	}, {
+		"path": "pages/service/serviceRecordDetail",
+		"style": {
+			"navigationBarTitleText": "服务记录-详情"
+		}
+	}, {
+		"path": "pages/recharge/recharge",
+		"style": {
+			"navigationBarTitleText": "充值"
+		}
+	}, {
+		"path": "pages/success/rechargeSuccess",
+		"style": {
+			"navigationBarTitleText": "充值"
+		}
+	}, {
+		"path": "pages/recharge/rechargeRecord",
+		"style": {
+			"navigationBarTitleText": "充值记录",
+			"enablePullDownRefresh": false
+		}
+	}, {
+		"path": "pages/service/serviceRecord",
+		"style": {
+			"navigationBarTitleText": "服务记录",
+			"enablePullDownRefresh": false
+		}
+	}, {
+		"path": "pages/success/serviceSuccess",
+		"style": {
+			"navigationBarTitleText": "服务预约"
+		}
+	}, {
+		"path": "pages/complaint/complaint",
+		"style": {
+			"navigationBarTitleText": "投诉建议"
+		}
+	}, {
+		"path": "pages/success/orderMealSuccess",
+		"style": {
+			"navigationBarTitleText": "订餐"
+		}
+	}, {
+		"path": "pages/meal/mealRecord",
+		"style": {
+			"navigationBarTitleText": "订餐记录"
+		}
+	}, {
+		"path": "pages/index/index",
+		"style": {
+			"navigationBarTitleText": "uni-ui基础项目"
+		}
+	}, {
+		"path": "pages/login/brushFaceLogin",
+		"style": {
+			"navigationBarTitleText": "刷脸登录"
+		}
+	}, {
+		"path": "pages/login/phoneNumberLogin",
+		"style": {
+			"navigationBarTitleText": "手机号登录"
+		}
+	}, {
+		"path": "pages/success/complaintSuccess",
+		"style": {
+			"navigationBarTitleText": "投诉建议"
+		}
+	}, {
+		"path": "pages/fail/fail",
+		"style": {
+			"navigationBarTitleText": "投诉建议"
+		}
+	}, {
+		"path": "pages/login/register",
+		"style": {
+			"navigationBarTitleText": "注册"
+		}
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#00BE86",
+		"backgroundColor": "#FFFFFF",
+		"enablePullDownRefresh": true
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/list/list",
+			"iconPath": "/static/img/indexNoIcon.png",
+			"selectedIconPath": "/static/img/indexIcon.png",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/personal/personal",
+			"iconPath": "/static/img/personlIcon.png",
+			"selectedIconPath": "/static/img/personalNoIcon.png",
+			"text": "我的"
+		}]
+	}
+}

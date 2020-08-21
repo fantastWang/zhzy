@@ -1,0 +1,28 @@
+
+.selected_view {
+	width: 29.5%;
+	line-height: 7vh;
+	height: 7vh;
+	background: rgba(0, 190, 134, 0.2);
+	border-radius: 2px;
+	border: 1px solid rgba(0, 194, 129, 1);
+	margin-left: 2vw;
+}
+.not_select_view {
+	width: 29.5%;
+	line-height: 7vh;
+	height: 7vh;
+	border-radius: 2px;
+	border: 1px solid rgba(235, 235, 235, 1);
+	margin-left: 2vw;
+}
+.bottom_view{
+	margin: 0 auto;width: 95%;margin-top: 35vh;height: 8vh;font-size: 16px;line-height: 8vh;border-radius:6px;
+}
+.button{
+	background:rgba(24,196,145,1);color: #FFFFFF;
+}
+.money_desc{
+	text-align: left;margin-top: 10vh;font-weight: bolder;font-size: 14px;margin-left: 2vw;
+}
+

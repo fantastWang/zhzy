@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/list/list",
+    "pages/meal/orderMeal",
+    "pages/personal/personal",
+    "pages/login/login",
+    "pages/login/forgotPassword",
+    "pages/service/serviceOrder",
+    "pages/service/serviceRecordDetail",
+    "pages/recharge/recharge",
+    "pages/success/rechargeSuccess",
+    "pages/recharge/rechargeRecord",
+    "pages/service/serviceRecord",
+    "pages/success/serviceSuccess",
+    "pages/complaint/complaint",
+    "pages/success/orderMealSuccess",
+    "pages/meal/mealRecord",
+    "pages/index/index",
+    "pages/login/brushFaceLogin",
+    "pages/login/phoneNumberLogin",
+    "pages/success/complaintSuccess",
+    "pages/fail/fail",
+    "pages/login/register"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#00BE86",
+    "backgroundColor": "#FFFFFF",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/list/list",
+        "iconPath": "/static/img/indexNoIcon.png",
+        "selectedIconPath": "/static/img/indexIcon.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/personal/personal",
+        "iconPath": "/static/img/personlIcon.png",
+        "selectedIconPath": "/static/img/personalNoIcon.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}
