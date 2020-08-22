@@ -26,24 +26,52 @@
 				value: "",
 				username: "",
 				password: "",
+				provider: null,
+				ipAddr: ""
 			}
 		},
 		computed: {},
 		onLoad() {
+			//获取供应商信息
+			this.initProvider();
+			//获取用户ip地址
+			this.getIp();
 			let that = this;
+			//从缓存中获取用户数据
 			uni.getStorage({
 				key: 'user',
 				success: function(res) {
-					console.log("onLoad:" + res);
 					that.username = res.data.wxcode;
 					that.password = res.data.passwd;
 				}
 			})
 		},
 		methods: {
+			initProvider() {
+				const filters = ['weixin', 'qq', 'weibo'];
+				uni.getProvider({
+					service: 'oauth',
+					success: (res) => {
+						this.provider = res.provider[0]
+					},
+					fail: (err) => {
+						console.error('获取服务供应商失败：' + JSON.stringify(err));
+					}
+				});
+			},
+			getIp() {
+				let that = this;
+				wx.request({
+					url: 'http://ip-api.com/json',
+					success: function(e) {
+						that.ipAddr = e.data.query;
+					}
+				});
+			},
 			onKeyInput(e) {
 				this.value = e.target.value
 			},
+			//手机号登录
 			phoneNumberLogin() {
 				if (this.value == "") {
 					return;
@@ -66,6 +94,8 @@
 					success: (res) => {
 						if (res.data.status === 1) {
 							let info = res.data.data;
+							info.provider = this.provider;
+							info.ipAddr = this.ipAddr;
 							uni.setStorage({
 								key: 'user',
 								data: info,
@@ -78,6 +108,7 @@
 									this.$http.fail();
 								}
 							});
+							
 						} else if (res.data.status === 2) {
 							this.$http.showToastOverride("用户不存在，请联系管理员添加");
 							// uni.showModal({
@@ -100,12 +131,8 @@
 					}
 				})
 			},
-			brushFaceLogin() {
-				uni.navigateTo({
-					url: '/pages/login/brushFaceLogin'
-				});
-			},
-			forgotPassword(){
+			//忘记密码
+			forgotPassword() {
 				uni.reLaunch({
 					url: '/pages/login/forgotPassword'
 				});

@@ -83,16 +83,6 @@
 			"navigationBarTitleText": "uni-ui基础项目"
 		}
 	}, {
-		"path": "pages/login/brushFaceLogin",
-		"style": {
-			"navigationBarTitleText": "刷脸登录"
-		}
-	}, {
-		"path": "pages/login/phoneNumberLogin",
-		"style": {
-			"navigationBarTitleText": "手机号登录"
-		}
-	}, {
 		"path": "pages/success/complaintSuccess",
 		"style": {
 			"navigationBarTitleText": "投诉建议"

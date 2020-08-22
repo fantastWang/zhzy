@@ -167,52 +167,79 @@ var _default =
       whichSelected: "50" };
 
   },
-  onLoad: function onLoad() {
-    this.initProvider();
-  },
+  onLoad: function onLoad() {},
   methods: {
-    initProvider: function initProvider() {
-      var filters = ['weixin', 'qq', 'weibo'];
-      uni.getProvider({
-        service: 'payment',
-        success: function success(res) {
-          console.log(res.provider);
-        },
-        fail: function fail(err) {
-          console.error('获取服务供应商失败：' + JSON.stringify(err));
-        } });
-
-    },
+    //选择金额
     changeMoney: function changeMoney(obj, money) {
       this.money = money;
       this.whichSelected = money;
     },
+    //输入金额
     onKeyUserNameInput: function onKeyUserNameInput(event) {
       this.money = event.target.value;
     },
-    guid: function guid() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0,
-        v = c == 'x' ? r : r & 0x3 | 0x8;
-        return v.toString(16);
-      });
-    },
-    recharge: function recharge() {var _this = this;
-      uni.requestPayment({
-        provider: 'wxpay',
-        timeStamp: String(Date.now()),
-        nonceStr: this.guid(),
-        package: 'prepay_id=wx20180101abcdefg',
-        signType: 'MD5',
-        service: "3",
-        paySign: '',
-        _debug: 1,
-        orderInfo: "",
-        success: function success(res) {
-          console.log('success:' + JSON.stringify(res));
+    //授权，获取openId
+    getOpenId: function getOpenId() {var _this = this;
+      uni.login({
+        provider: this.user.provider,
+        success: function success(e) {
+          if (_this.user.provider == 'weixin') {
+            uni.request({
+              url: "https://api.weixin.qq.com/sns/jscode2session?appid=wx18e83fe9f3608058&secret=c8b3b8b7c5fd2f2b474b0fe972a3fe4b&js_code=" +
+              e.code + "&grant_type=authorization_code",
+              method: 'GET',
+              success: function success(res) {
+                _this.recharge(res.data.openid);
+              },
+              fail: function fail(e) {
+                that.$http.showToastOverride('支付失败：无法获取openId失败');
+              } });
+
+          } else {
+            that.$http.showToastOverride('目前只支持微信支付，当前平台不是微信');
+          }
         },
         fail: function fail(err) {
-          console.log('fail:' + JSON.stringify(err));
+          _this.$http.showToastOverride('授权登录失败：' + JSON.stringify(err));
+        } });
+
+
+    },
+    //充值操作
+    recharge: function recharge(openId) {var _this2 = this;
+      uni.request({
+        url: this.$http.contextPath + 'orderMeal/wxPayOrder',
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json' },
+
+        data: {
+          "ip": this.user.ipAddr,
+          "money": "1",
+          "elderlyId": this.user.id,
+          "openId": openId },
+
+        success: function success(res) {
+          if (res.data.status == 1) {
+            uni.requestPayment({
+              provider: 'wxpay',
+              timeStamp: res.data.data.timeStamp + "",
+              nonceStr: res.data.data.nonceStr,
+              package: 'prepay_id=' + res.data.data.prepayId,
+              signType: res.data.data.signType,
+              service: "3",
+              paySign: res.data.data.prepayIdSign,
+              _debug: 1,
+              success: function success(res) {
+                console.log('success:支付成功');
+              },
+              fail: function fail(err) {
+                console.log('fail:' + JSON.stringify(err));
+              } });
+
+          } else {
+            _this2.$http.showToastOverride(res.data.msg);
+          }
         } });
 
       return;
@@ -241,10 +268,10 @@ var _default =
         success: function success(res) {
           if (res.data.status == 1) {
             uni.navigateTo({
-              url: '/pages/success/rechargeSuccess?money=' + _this.money });
+              url: '/pages/success/rechargeSuccess?money=' + _this2.money });
 
           } else {
-            _this.$http.showToastOverride(res.data.msg);
+            _this2.$http.showToastOverride(res.data.msg);
           }
         },
         fail: function fail() {

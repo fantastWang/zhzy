@@ -61,7 +61,7 @@ border-radius:6px;padding-bottom: 1vh;margin-bottom: 1%;">
 				</view>
 			</view>
 			<view class="flex-item flex-item-V" style="height: 25vh;width: 95%;margin: 0 auto;box-shadow:0px 6px 16px 0px rgba(0,190,134,0.1),0px -2px 10px 0px rgba(0,190,134,0.1);border-radius:6px;padding-bottom: 1vh;margin-bottom: 1%;">
-				<view style="background:rgba(255,255,255,1);border-radius:6px;height: 5vh;line-height: 5vh;margin-top: 15vh;border:1px solid #D3D3D3;" @tap="logout">{{this.user==null?'登录':'退出登录'}}</view>
+				<view style="background:rgba(255,255,255,1);border-radius:6px;height: 5vh;line-height: 5vh;margin-top: 15vh;border:1px solid #D3D3D3;" @tap="logout">{{user==null?'登录':'退出登录'}}</view>
 				<view style="color:#D3D3D3;font-size: 12px;" @tap="complaint()">投诉建议</view>
 			</view>
 		</view>

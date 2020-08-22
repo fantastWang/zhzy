@@ -15,13 +15,13 @@
 			<view class="money_desc">输入其他金额</view>
 			<view class="uni-flex uni-row">
 				<view class="flex-item" style="width: 80%;text-align: left;">
-					<input class="uni-input" type="number" maxlength="5" @input="onKeyUserNameInput" placeholder="请输入充值金额" />
+					<input class="uni-input" type="number" maxlength="5" @input="onKeyUserNameInput()" placeholder="请输入充值金额" />
 				</view>
 				<view class="flex-item" style="width: 20%;line-height: 5vh;font-size: 18px;">元</view>
 			</view>
 		</view>
 		<view class="bottom_view">
-			<button class="button" @click="recharge">确定</button>
+			<button class="button" @click="getOpenId()">确定</button>
 		</view>
 	</view>
 </template>
@@ -35,56 +35,83 @@
 				whichSelected: "50"
 			}
 		},
-		onLoad() {
-		    this.initProvider();
-		},
+		onLoad() {},
 		methods: {
-			initProvider() {
-			    const filters = ['weixin', 'qq', 'weibo'];
-			    uni.getProvider({
-			        service: 'payment',
-			        success: (res) => {
-						console.log(res.provider);
-			        },
-			        fail: (err) => {
-			            console.error('获取服务供应商失败：' + JSON.stringify(err));
-			        }
-			    });
-			},
+			//选择金额
 			changeMoney(obj, money) {
 				this.money = money;
-				this.whichSelected =money;
+				this.whichSelected = money;
 			},
-			onKeyUserNameInput: function(event) {
+			//输入金额
+			onKeyUserNameInput(event) {
 				this.money = event.target.value;
 			},
-			guid() {
-				return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-					var r = Math.random() * 16 | 0,
-						v = c == 'x' ? r : (r & 0x3 | 0x8);
-					return v.toString(16);
+			//授权，获取openId
+			getOpenId() {
+				uni.login({
+					provider: this.user.provider,
+					success: (e) => {
+						if (this.user.provider == 'weixin') {
+							uni.request({
+								url: "https://api.weixin.qq.com/sns/jscode2session?appid=wx18e83fe9f3608058&secret=c8b3b8b7c5fd2f2b474b0fe972a3fe4b&js_code=" +
+									e.code + "&grant_type=authorization_code",
+								method: 'GET',
+								success: (res) => {
+									this.recharge(res.data.openid);
+								},
+								fail(e) {
+									that.$http.showToastOverride('支付失败：无法获取openId失败');
+								}
+							})
+						} else {
+							that.$http.showToastOverride('目前只支持微信支付，当前平台不是微信');
+						}
+					},
+					fail: (err) => {
+						this.$http.showToastOverride('授权登录失败：' + JSON.stringify(err));
+					}
 				});
+
 			},
-			recharge() {
-				uni.requestPayment({
-				    provider: 'wxpay',
-				    timeStamp: String(Date.now()),
-				    nonceStr: this.guid(),
-				    package: 'prepay_id=wx20180101abcdefg',
-				    signType: 'MD5',
-					service:"3",
-				    paySign: '',
-					_debug:1,
-					orderInfo:"",
-				    success: function (res) {
-				        console.log('success:' + JSON.stringify(res));
-				    },
-				    fail: function (err) {
-				        console.log('fail:' + JSON.stringify(err));
-				    }
-				});
+			//充值操作
+			recharge(openId) {
+				uni.request({
+					url: this.$http.contextPath + 'orderMeal/wxPayOrder',
+					method: 'POST',
+					header: {
+						'Content-Type': 'application/json'
+					},
+					data: {
+						"ip": this.user.ipAddr,
+						"money": "1",
+						"elderlyId": this.user.id,
+						"openId": openId
+					},
+					success: (res) => {
+						if (res.data.status == 1) {
+							uni.requestPayment({
+								provider: 'wxpay',
+								timeStamp: res.data.data.timeStamp + "",
+								nonceStr: res.data.data.nonceStr,
+								package: 'prepay_id=' + res.data.data.prepayId,
+								signType: res.data.data.signType,
+								service: "3",
+								paySign: res.data.data.prepayIdSign,
+								_debug: 1,
+								success: function(res) {
+									console.log('success:支付成功');
+								},
+								fail: function(err) {
+									console.log('fail:' + JSON.stringify(err));
+								}
+							});
+						} else {
+							this.$http.showToastOverride(res.data.msg);
+						}
+					}
+				})
 				return;
-				
+
 				let data = {
 					//充值操作人员：也就是自己
 					operator: this.user,
@@ -107,11 +134,11 @@
 					},
 					data: data,
 					success: (res) => {
-						if(res.data.status==1){
+						if (res.data.status == 1) {
 							uni.navigateTo({
-								url: '/pages/success/rechargeSuccess?money='+this.money
+								url: '/pages/success/rechargeSuccess?money=' + this.money
 							});
-						}else{
+						} else {
 							this.$http.showToastOverride(res.data.msg);
 						}
 					},
@@ -143,16 +170,27 @@
 		border: 1px solid rgba(235, 235, 235, 1);
 		margin-left: 2vw;
 	}
-	
-	.bottom_view{
-		margin: 0 auto;width: 95%;margin-top: 35vh;height: 8vh;font-size: 16px;line-height: 8vh;border-radius:6px;
+
+	.bottom_view {
+		margin: 0 auto;
+		width: 95%;
+		margin-top: 35vh;
+		height: 8vh;
+		font-size: 16px;
+		line-height: 8vh;
+		border-radius: 6px;
 	}
-	
-	.button{
-		background:rgba(24,196,145,1);color: #FFFFFF;
+
+	.button {
+		background: rgba(24, 196, 145, 1);
+		color: #FFFFFF;
 	}
-	
-	.money_desc{
-		text-align: left;margin-top: 10vh;font-weight: bolder;font-size: 14px;margin-left: 2vw;
+
+	.money_desc {
+		text-align: left;
+		margin-top: 10vh;
+		font-weight: bolder;
+		font-size: 14px;
+		margin-left: 2vw;
 	}
 </style>

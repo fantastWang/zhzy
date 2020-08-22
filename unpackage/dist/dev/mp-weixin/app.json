@@ -16,8 +16,6 @@
     "pages/success/orderMealSuccess",
     "pages/meal/mealRecord",
     "pages/index/index",
-    "pages/login/brushFaceLogin",
-    "pages/login/phoneNumberLogin",
     "pages/success/complaintSuccess",
     "pages/fail/fail",
     "pages/login/register"
@@ -50,6 +48,5 @@
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap.json"
+  "usingComponents": {}
 }

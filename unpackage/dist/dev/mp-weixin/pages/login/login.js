@@ -157,26 +157,54 @@ var _default =
     return {
       value: "",
       username: "",
-      password: "" };
+      password: "",
+      provider: null,
+      ipAddr: "" };
 
   },
   computed: {},
   onLoad: function onLoad() {
+    //获取供应商信息
+    this.initProvider();
+    //获取用户ip地址
+    this.getIp();
     var that = this;
+    //从缓存中获取用户数据
     uni.getStorage({
       key: 'user',
       success: function success(res) {
-        console.log("onLoad:" + res);
         that.username = res.data.wxcode;
         that.password = res.data.passwd;
       } });
 
   },
   methods: {
+    initProvider: function initProvider() {var _this = this;
+      var filters = ['weixin', 'qq', 'weibo'];
+      uni.getProvider({
+        service: 'oauth',
+        success: function success(res) {
+          _this.provider = res.provider[0];
+        },
+        fail: function fail(err) {
+          console.error('获取服务供应商失败：' + JSON.stringify(err));
+        } });
+
+    },
+    getIp: function getIp() {
+      var that = this;
+      wx.request({
+        url: 'http://ip-api.com/json',
+        success: function success(e) {
+          that.ipAddr = e.data.query;
+        } });
+
+    },
     onKeyInput: function onKeyInput(e) {
       this.value = e.target.value;
     },
-    phoneNumberLogin: function phoneNumberLogin() {var _this = this;
+    //手机号登录
+    phoneNumberLogin: function phoneNumberLogin() {var _this2 = this;
       if (this.value == "") {
         return;
       }
@@ -198,6 +226,8 @@ var _default =
         success: function success(res) {
           if (res.data.status === 1) {
             var info = res.data.data;
+            info.provider = _this2.provider;
+            info.ipAddr = _this2.ipAddr;
             uni.setStorage({
               key: 'user',
               data: info,
@@ -207,11 +237,12 @@ var _default =
 
               },
               fail: function fail() {
-                _this.$http.fail();
+                _this2.$http.fail();
               } });
 
+
           } else if (res.data.status === 2) {
-            _this.$http.showToastOverride("用户不存在，请联系管理员添加");
+            _this2.$http.showToastOverride("用户不存在，请联系管理员添加");
             // uni.showModal({
             // 	title: '提示',
             // 	content: '用户不存在，现在去注册吗？',
@@ -224,19 +255,15 @@ var _default =
             // 	}
             // });
           } else {
-            _this.$http.showToastOverride(res.data.msg);
+            _this2.$http.showToastOverride(res.data.msg);
           }
         },
         fail: function fail() {
-          _this.$http.fail();
+          _this2.$http.fail();
         } });
 
     },
-    brushFaceLogin: function brushFaceLogin() {
-      uni.navigateTo({
-        url: '/pages/login/brushFaceLogin' });
-
-    },
+    //忘记密码
     forgotPassword: function forgotPassword() {
       uni.reLaunch({
         url: '/pages/login/forgotPassword' });
