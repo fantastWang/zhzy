@@ -256,26 +256,26 @@ var _default =
 
 
   },
-  onLoad: function onLoad() {var _this = this;
+  onLoad: function onLoad() {
     if (this.user == "") {
       this.$http.showToastOverride("请先登录");
     }
-    uni.request({
-      url: this.$http.contextPath + 'orderMeal/information',
-      method: 'POST',
-      header: {
-        'Content-Type': 'application/json' },
-
-      data: {
-        "elderlyId": this.user.id,
-        "organId": this.user.organId },
-
-      success: function success(res) {
-        if (res.data.status == 1) {
-          _this.info.balance = res.data.data.balance;
-        }
-      } });
-
+    // uni.request({
+    // 	url: this.$http.contextPath + 'orderMeal/information',
+    // 	method: 'POST',
+    // 	header: {
+    // 		'Content-Type': 'application/json'
+    // 	},
+    // 	data: {
+    // 		"elderlyId": this.user.id,
+    // 		"organId": this.user.organId
+    // 	},
+    // 	success: (res) => {
+    // 		if (res.data.status == 1) {
+    // 			this.info.balance = res.data.data.balance
+    // 		}
+    // 	}
+    // });
   },
   methods: {
     call: function call() {

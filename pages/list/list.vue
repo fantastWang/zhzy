@@ -13,7 +13,7 @@
 						<view class="flex-item flex-item-V" style="height: 50%;">
 							<view style="height: 100%;">
 								<label style="font-weight: bolder;font-size: 5vw;color: #FFFFFF;">账户余额：</label>
-								<label style="font-size: 4vw;color: #FFED58;">{{info.balance}}元</label>
+								<label style="font-size: 4vw;color: #FFED58;">{{user.balance==null?0:user.balance}}元</label>
 							</view>
 						</view>
 					</view>
@@ -120,22 +120,22 @@
 			if (this.user == "") {
 				this.$http.showToastOverride("请先登录");
 			}
-			uni.request({
-				url: this.$http.contextPath + 'orderMeal/information',
-				method: 'POST',
-				header: {
-					'Content-Type': 'application/json'
-				},
-				data: {
-					"elderlyId": this.user.id,
-					"organId": this.user.organId
-				},
-				success: (res) => {
-					if (res.data.status == 1) {
-						this.info.balance = res.data.data.balance
-					}
-				}
-			});
+			// uni.request({
+			// 	url: this.$http.contextPath + 'orderMeal/information',
+			// 	method: 'POST',
+			// 	header: {
+			// 		'Content-Type': 'application/json'
+			// 	},
+			// 	data: {
+			// 		"elderlyId": this.user.id,
+			// 		"organId": this.user.organId
+			// 	},
+			// 	success: (res) => {
+			// 		if (res.data.status == 1) {
+			// 			this.info.balance = res.data.data.balance
+			// 		}
+			// 	}
+			// });
 		},
 		methods: {
 			call(){

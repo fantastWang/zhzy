@@ -15,7 +15,7 @@
 			<view class="money_desc">输入其他金额</view>
 			<view class="uni-flex uni-row">
 				<view class="flex-item" style="width: 80%;text-align: left;">
-					<input class="uni-input" type="number" maxlength="5" @input="onKeyUserNameInput()" placeholder="请输入充值金额" />
+					<input class="uni-input" type="number" maxlength="5" @input="onKeyUserNameInput($event)" placeholder="请输入充值金额" />
 				</view>
 				<view class="flex-item" style="width: 20%;line-height: 5vh;font-size: 18px;">元</view>
 			</view>
@@ -53,14 +53,20 @@
 					success: (e) => {
 						if (this.user.provider == 'weixin') {
 							uni.request({
-								url: "https://api.weixin.qq.com/sns/jscode2session?appid=wx18e83fe9f3608058&secret=c8b3b8b7c5fd2f2b474b0fe972a3fe4b&js_code=" +
-									e.code + "&grant_type=authorization_code",
-								method: 'GET',
-								success: (res) => {
-									this.recharge(res.data.openid);
+								url: this.$http.contextPath + 'orderMeal/getOpenId',
+								method: 'POST',
+								header: {
+									'Content-Type': 'application/json'
 								},
-								fail(e) {
-									that.$http.showToastOverride('支付失败：无法获取openId失败');
+								data: {
+									"code": e.code
+								},
+								success: (res) => {
+									if (res.data.status == 1) {
+										this.payment(res.data.data.openid);
+									} else {
+										this.$http.showToastOverride(res.data.msg);
+									}
 								}
 							})
 						} else {
@@ -71,10 +77,10 @@
 						this.$http.showToastOverride('授权登录失败：' + JSON.stringify(err));
 					}
 				});
-
 			},
-			//充值操作
-			recharge(openId) {
+			//支付
+			payment(openId){
+				console.log(this.user);
 				uni.request({
 					url: this.$http.contextPath + 'orderMeal/wxPayOrder',
 					method: 'POST',
@@ -83,7 +89,7 @@
 					},
 					data: {
 						"ip": this.user.ipAddr,
-						"money": "1",
+						"money": this.money,
 						"elderlyId": this.user.id,
 						"openId": openId
 					},
@@ -100,9 +106,10 @@
 								_debug: 1,
 								success: function(res) {
 									console.log('success:支付成功');
+									this.recharge();
 								},
 								fail: function(err) {
-									console.log('fail:' + JSON.stringify(err));
+									console.log('fail:支付失败' + JSON.stringify(err));
 								}
 							});
 						} else {
@@ -110,8 +117,9 @@
 						}
 					}
 				})
-				return;
-
+			},
+			//充值操作
+			recharge() {
 				let data = {
 					//充值操作人员：也就是自己
 					operator: this.user,
@@ -119,12 +127,11 @@
 					organizationId: this.user.organId,
 					rechargeAmount: this.money,
 					//elderly_account中的account
-					account: 3201060001,
+					account: this.user.elderlyOrganizationAccount,
 					//elderly_account中的balance
-					balance: 89,
+					balance: this.user.balance,
 					//elderly_account中的id
-					id: 793,
-					//unifiedLogo: curElderly.elderlyFrom
+					id: this.user.accountId
 				}
 				uni.request({
 					url: this.$http.contextPath + 'elderly-organization-account/recharge',
